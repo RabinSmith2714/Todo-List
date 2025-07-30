@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+const API_BASE = import.meta.env.VITE_API_BASE;
+
 const TodoList = () => {
     const [text, setText] = useState('');
     const [todos, setTodos] = useState([]);
@@ -9,7 +11,7 @@ const TodoList = () => {
     useEffect(() => {
         const fetchTodos = async () => {
             try {
-                const res = await axios.get("https://todo-list-hcdj.onrender.com/api/todos");
+                const res = await axios.get(`${API_BASE}/todos`);
                 setTodos(res.data);
             } catch (error) {
                 console.error("Error fetching todos:", error);
@@ -18,10 +20,9 @@ const TodoList = () => {
         fetchTodos();
     }, []);
 
-
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`https://todo-list-hcdj.onrender.com/api/todos/${id}`);
+            await axios.delete(`${API_BASE}/todos/${id}`);
             setTodos(todos.filter(todo => todo._id !== id));
         } catch (error) {
             console.error("Error deleting todo:", error);
@@ -30,8 +31,8 @@ const TodoList = () => {
 
     const markAsComplete = async (id) => {
         try {
-            await axios.put(`https://todo-list-hcdj.onrender.com/api/todos/${id}/status`);
-            const res = await axios.get("https://todo-list-hcdj.onrender.com/api/todos");
+            await axios.put(`${API_BASE}/todos/${id}/status`);
+            const res = await axios.get(`${API_BASE}/todos`);
             setTodos(res.data);
         } catch (error) {
             console.error('Error updating status:', error);
@@ -48,17 +49,13 @@ const TodoList = () => {
         if (!text.trim()) return;
         try {
             if (editId) {
-                // Update      
-                await axios.put(`https://todo-list-hcdj.onrender.com/api/todos/${editId}`, { text });
-                const res = await axios.get("https://todo-list-hcdj.onrender.com/api/todos");
-                setTodos(res.data);
+                await axios.put(`${API_BASE}/todos/${editId}`, { text });
                 setEditId(null);
             } else {
-                // Add
-                await axios.post("https://todo-list-hcdj.onrender.com/api/todos/add", { text });
-                const res = await axios.get("https://todo-list-hcdj.onrender.com/api/todos");
-                setTodos(res.data);
+                await axios.post(`${API_BASE}/todos/add`, { text });
             }
+            const res = await axios.get(`${API_BASE}/todos`);
+            setTodos(res.data);
             setText("");
         } catch (error) {
             console.error("Error saving todo:", error);
@@ -68,9 +65,14 @@ const TodoList = () => {
     return (
         <div className="todo-list">
             <form className="todo-form" onSubmit={handleSubmit}>
-                <h3>Add Todo</h3>
-                <input type="text" placeholder="Add a new todo" value={text} onChange={(e) => setText(e.target.value)} />
-                <button onClick={handleSubmit}>{editId ? "Update" : "Add"}</button>
+                <h3>{editId ? "Edit Todo" : "Add Todo"}</h3>
+                <input
+                    type="text"
+                    placeholder="Add a new todo"
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                />
+                <button type="submit">{editId ? "Update" : "Add"}</button>
             </form>
 
             <div className="todo-items">
