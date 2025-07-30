@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const CONNECTION_URI = `mongodb+srv://rabinsmith:4m3z9adnbw5d7Y9C@todo.ytjw4op.mongodb.net/tododb?retryWrites=true&w=majority&appName=todo`;
+const CONNECTION_URI = process.env.MONGO_URI;
 
 mongoose.connect(CONNECTION_URI)
   .then(() => console.log('Database connected'))
