@@ -9,7 +9,7 @@ const TodoList = () => {
     useEffect(() => {
         const fetchTodos = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/api/todos");
+                const res = await axios.get("https://todo-list-hcdj.onrender.com/api/todos");
                 setTodos(res.data);
             } catch (error) {
                 console.error("Error fetching todos:", error);
@@ -21,7 +21,7 @@ const TodoList = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:5000/api/todos/${id}`);
+            await axios.delete(`https://todo-list-hcdj.onrender.com/api/todos/${id}`);
             setTodos(todos.filter(todo => todo._id !== id));
         } catch (error) {
             console.error("Error deleting todo:", error);
@@ -30,8 +30,8 @@ const TodoList = () => {
 
     const markAsComplete = async (id) => {
         try {
-            await axios.put(`http://localhost:5000/api/todos/${id}/status`);
-            const res = await axios.get("http://localhost:5000/api/todos");
+            await axios.put(`https://todo-list-hcdj.onrender.com/api/todos/${id}/status`);
+            const res = await axios.get("https://todo-list-hcdj.onrender.com/api/todos");
             setTodos(res.data);
         } catch (error) {
             console.error('Error updating status:', error);
@@ -49,14 +49,14 @@ const TodoList = () => {
         try {
             if (editId) {
                 // Update      
-                await axios.put(`http://localhost:5000/api/todos/${editId}`, { text });
-                const res = await axios.get("http://localhost:5000/api/todos");
+                await axios.put(`https://todo-list-hcdj.onrender.com/api/todos/${editId}`, { text });
+                const res = await axios.get("https://todo-list-hcdj.onrender.com/api/todos");
                 setTodos(res.data);
                 setEditId(null);
             } else {
                 // Add
-                await axios.post("http://localhost:5000/api/todos/add", { text });
-                const res = await axios.get("http://localhost:5000/api/todos");
+                await axios.post("https://todo-list-hcdj.onrender.com/api/todos/add", { text });
+                const res = await axios.get("https://todo-list-hcdj.onrender.com/api/todos");
                 setTodos(res.data);
             }
             setText("");
